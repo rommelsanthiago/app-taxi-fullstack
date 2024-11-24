@@ -17,6 +17,10 @@ pnpm-debug.log*
 # Build do Node.js
 /backend/dist
 
+# Arquivos do banco de dados
+/data/mongodb/db
+/data/mongodb/logs
+
 # Arquivos de ambiente
 .env
 .env.local
