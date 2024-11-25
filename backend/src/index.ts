@@ -1,4 +1,4 @@
 import { app } from './controllers/app';
-import { healthCheckRouter } from './controllers/routes/HealthCheckRoutes';
+import { ridesRouter } from './controllers/routes/RidesRoutes';
 
-app.use('/', healthCheckRouter);
+app.use('/', ridesRouter);
