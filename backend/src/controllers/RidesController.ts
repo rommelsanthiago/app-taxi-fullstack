@@ -3,12 +3,17 @@ import { RidesBusiness } from "../business/RidesBusiness";
 
 export class RidesController {
     constructor (private ridesBusiness: RidesBusiness) {}
-    public checkHealtDatabase = async (req: Request, res: Response) => {
+    public estimate = async (req: Request, res: Response) => {
         try {
-            await this.ridesBusiness.checkHealthBusiness();
-            res.status(200).send({ status: 'The API is up and running. Health check is passed.' });
+            const { customer_id, origin, destination } = req.body;
+            const estimate = await this.ridesBusiness.estimate(customer_id, origin, destination);
+
+            res.status(200).send(estimate);
         } catch (error: any) {
-            res.status(400).send({ message: error.message });
+            res.status(error.statusCode || 400).send({
+                error_code: error.code || "INVALID_DATA",
+                error_description: error.message,
+            });
         }
     }
 }
