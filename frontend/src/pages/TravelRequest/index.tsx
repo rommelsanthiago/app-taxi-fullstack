@@ -1,15 +1,18 @@
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 
 import * as S from "./styles";
 
-import { Notify } from "../../services/Notify";
 import { api } from "../../utils/api";
+import { Notify } from "../../services/Notify";
+import { goToTravelOptions } from "../../Routes/coordinator";
 
 const TravelRequest = () => {
     const [userId, setUserId] = useState('');
     const [sourceAddress, setSourceAddress] = useState('');
     const [destinationAddress, setDestinationAddress] = useState('');
+    const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -22,7 +25,9 @@ const TravelRequest = () => {
             
             const estimates = await axios.post(`${api}/estimate`, body);
             
-            return estimates;
+            localStorage.setItem("estimates", JSON.stringify(estimates.data.estimate));
+
+            goToTravelOptions(navigate);
         } catch (err: any) {
             Notify.error(err.response.data.error_description, "topRight");
         }
