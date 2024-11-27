@@ -18,52 +18,52 @@ services:
     env_file:
       - .env  
     networks: 
-      - $NETWORK
-      - $BACKEND
+      - frontend
+      - backend
     depends_on:
       - backend
 
   database:
     image: mongo
-    container_name: $MONGODB_HOST_NAME
+    container_name: taxi_database
     command: "--auth & /bin/sh -c 'chmod +x /docker-entrypoint-initdb.d/mongo-init.sh & /bin/bash /docker-entrypoint-initdb.d/mongo-init.sh'"
     restart: always
     env_file:
       - .env
     tty: true
     environment:
-      MONGO_INITDB_DATABASE: $MONGODB_DATABASE
-      MONGO_INITDB_ROOT_USERNAME: $MONGODB_ROOT_USER
-      MONGO_INITDB_ROOT_PASSWORD: $MONGODB_ROOT_PASSWORD
-      MONGO_INITDB_USERNAME: $MONGODB_USER
-      MONGO_INITDB_PASSWORD: $MONGODB_PASSWORD
+      MONGO_INITDB_DATABASE: taxi
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: lVlY0rM3PwS5U2cP
+      MONGO_INITDB_USERNAME: rommel
+      MONGO_INITDB_PASSWORD: B3QA9BW295t6ZmVs
       TZ: America/Sao_Paulo
     volumes:
       - ./data/mongodb/db:/data/db
       - ./data/mongodb/logs:/var/log/mongodb
       - ./data/mongodb/entrypoint/mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
     ports:
-      - "$MONGODB_PORT:27017"
+      - "$27017:27017"
     networks:
-      - $BACKEND
+      - backend
   
   mongo-express:
     image: mongo-express
-    container_name: $EXPRESS_MONGO_HOST_NAME
+    container_name: mongo_express
     restart: always
     ports:
-      - "$EXPRESS_MONGO_PORT:8081"
+      - "8081:8081"
     environment:
       ME_CONFIG_MONGODB_ENABLE_ADMIN: true
-      ME_CONFIG_MONGODB_ADMINUSERNAME: $EXPRESS_MONGO_ADMIN_USERNAME
-      ME_CONFIG_MONGODB_ADMINPASSWORD: $EXPRESS_MONGO_ADMIN_PASSWORD
-      ME_CONFIG_BASICAUTH_USERNAME: $EXPRESS_MONGO_BASIC_USERNAME
-      ME_CONFIG_BASICAUTH_PASSWORD: $EXPRESS_MONGO_BASIC_PASSWORD
-      ME_CONFIG_MONGODB_URL: mongodb://$MONGODB_ROOT_USER:$MONGODB_ROOT_PASSWORD@$MONGODB_HOST_NAME:$MONGODB_PORT/
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: 1YmOP7S2ZwEuh0vn
+      ME_CONFIG_BASICAUTH_USERNAME: rommel
+      ME_CONFIG_BASICAUTH_PASSWORD: hD7RIgdG7ovUmuyY
+      ME_CONFIG_MONGODB_URL: mongodb://rommel:B3QA9BW295t6ZmVs@taxi_database:27017
     depends_on:
       - database
     networks:
-      - $BACKEND
+      - backend
 
   backend:
     build: 
@@ -74,8 +74,8 @@ services:
     env_file:
       - .env
     ports:
-      - "$BACKEND_PORT:8080"
+      - "8080:8080"
     depends_on:
       - database
     networks:
-      - $BACKEND
+      - backend
