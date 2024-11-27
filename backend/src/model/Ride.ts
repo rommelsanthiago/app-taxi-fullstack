@@ -6,7 +6,7 @@ export interface RideEstimateInput {
     destination: string;
 };
 
-interface Driver extends Document {
+export interface Driver extends Document {
     id: number;
     name: string;
     description: string;
@@ -18,6 +18,31 @@ interface Driver extends Document {
     ratePerKm: number;
     minKm: number;
 };
+
+export interface Estimates {
+    origin: {
+        latitude: number;
+        longitude: number;
+    };
+    destination: {
+        latitude: number;
+        longitude: number;
+    };
+    distance: number;
+    duration: string;
+    options: Driver[];
+    routeResponse: {
+        geocoded_waypoints: GeocodedWaypoint[][],
+        routes: [any[]],
+        status: string
+    }
+}
+
+export interface GeocodedWaypoint {
+    geocoder_status: string
+    place_id: string
+    types: string[]
+} 
 
 const DriverSchema = new Schema<Driver>({
     id: { type: Number, required: true, unique: true },
