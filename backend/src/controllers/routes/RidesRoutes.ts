@@ -12,3 +12,4 @@ const ridesController = new RidesController(ridesBusiness);
 
 ridesRouter.post('/estimate', (req: Request, res: Response) => ridesController.estimate(req, res));
 ridesRouter.patch('/confirm', (req: Request, res: Response) => ridesController.confirmRide(req, res));
+ridesRouter.get('/:customer_id', (req: Request, res: Response) => ridesController.findRides(req, res));

@@ -13,7 +13,7 @@ export class RidesController {
             res.status(200).json({message: "Operação realizada com sucesso", estimate});
         } catch (error: any) {
             console.log(error)
-            res.status(error.error_code).send({
+            res.status(error.status_code).send({
                 error_code: error.error_code,
                 description: error.description,
                 error_description: error.error_description,
@@ -42,11 +42,28 @@ export class RidesController {
 
             res.status(200).json({message: "Operação realizada com sucesso", "success": true});
         } catch (error: any) {
-            res.status(error.error_code).send({
+            res.status(error.status_code).send({
                 error_code: error.error_code,
                 description: error.description,
                 error_description: error.error_description,
             });
+        }
+    }
+
+    public findRides = async (req: Request, res: Response) => {
+        try {
+            const { customer_id } = req.params;
+            const { driver_id } = req.query;
+
+            const rides = await this.ridesBusiness.findRides(customer_id, Number(driver_id));
+
+            res.status(200).json({message: "Operação realizada com sucesso", rides});
+        } catch (error: any) {
+            res.status(error.status_code).send({
+                error_code: error.error_code,
+                description: error.description,
+                error_description: error.error_description,
+            })
         }
     }
 }

@@ -1,6 +1,6 @@
 import RideService from "../services/RideService";
 import { RidesRepository } from "./RidesRepository";
-import { CustomError, DriverNotFound, InvalidData, InvalidDistance, SameData } from "../errors/customErrors";
+import { CustomError, DriverNotFound, InvalidData, InvalidDistance, InvalidDriver, RidesNotFound, SameData } from "../errors/customErrors";
 import { Estimates, Ride, RideConfirmInput } from "../model/Ride";
 
 export class RidesBusiness {
@@ -45,6 +45,7 @@ export class RidesBusiness {
         } catch (error: any) {
             console.error(error);
             throw new CustomError (
+                error.status_code,
                 error.error_code,
                 error.description, 
                 error.error_description
@@ -90,6 +91,48 @@ export class RidesBusiness {
             await this.ridesDatabase.saveRide(ride);            
         } catch (error: any) {
             throw new CustomError (
+                error.status_code,
+                error.error_code,
+                error.description, 
+                error.error_description
+            );   
+        }
+    }
+
+    public findRides = async (customer_id: string, driver_id?: number) => {
+        try {
+            if(!customer_id) {
+                throw new InvalidData();
+            }
+
+            let rides;
+
+            if(driver_id) {
+                const driver = await this.ridesDatabase.findDriverById(driver_id);
+                
+                if(!driver) {
+                    throw new InvalidDriver();
+                }
+
+                rides = await this.ridesDatabase.findRidesByUser(customer_id, driver_id);
+                
+                if(rides.length === 0) {
+                    throw new RidesNotFound();
+                }
+
+                return rides;
+            }
+
+            rides = await this.ridesDatabase.findRidesByUser(customer_id);
+            
+            if(rides.length === 0) {
+                throw new RidesNotFound();
+            }
+
+            return rides;
+        } catch (error: any) {
+            throw new CustomError (
+                error.status_code,
                 error.error_code,
                 error.description, 
                 error.error_description

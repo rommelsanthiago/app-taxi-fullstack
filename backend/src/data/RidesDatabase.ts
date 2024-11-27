@@ -44,6 +44,7 @@ export class RidesDatabase extends BaseDatabase {
             return drivers;
         } catch (error: any) {
             throw new CustomError(
+                error.status_code,
                 error.error_code,
                 error.message, 
                 error.error_description
@@ -59,6 +60,7 @@ export class RidesDatabase extends BaseDatabase {
             return driver;
         } catch (error: any) {
             throw new CustomError(
+                error.status_code,
                 error.error_code,
                 error.message, 
                 error.error_description
@@ -72,6 +74,29 @@ export class RidesDatabase extends BaseDatabase {
             await RidesDatabase.ride.create(ride);
         } catch (error: any) {
             throw new CustomError(
+                error.status_code,
+                error.error_code,
+                error.message,
+                error.error_description
+            )
+        }
+    }
+
+    public async findRidesByUser(customer_id: string, driver_id?: number): Promise<Ride[]> {
+        try {
+            await RidesDatabase.connection;
+            let query = RidesDatabase.ride.find({customer_id: customer_id});
+
+            if (driver_id) {
+                query = query.where({"driver.id": driver_id});
+            };
+
+            const rides: Ride[] = await query.sort({created_at: -1}).exec();
+
+            return rides;
+        } catch (error: any) {
+            throw new CustomError(
+                error.status_code,
                 error.error_code,
                 error.message,
                 error.error_description
