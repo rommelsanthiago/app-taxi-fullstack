@@ -43,12 +43,15 @@ export class RidesBusiness {
 
             return estimates;
         } catch (error: any) {
-            console.error(error);
-            throw new CustomError (
-                error.status_code,
-                error.error_code,
-                error.description, 
-                error.error_description
+            if (error instanceof CustomError) {
+                throw error;
+            }
+    
+            throw new CustomError(
+                500,
+                "INTERNAL_ERROR",
+                "Ocorreu um erro interno no servidor",
+                error.message || "Erro desconhecido"
             );
         }
     }
@@ -90,12 +93,16 @@ export class RidesBusiness {
 
             await this.ridesDatabase.saveRide(ride);            
         } catch (error: any) {
-            throw new CustomError (
-                error.status_code,
-                error.error_code,
-                error.description, 
-                error.error_description
-            );   
+            if (error instanceof CustomError) {
+                throw error;
+            }
+    
+            throw new CustomError(
+                500,
+                "INTERNAL_ERROR",
+                "Ocorreu um erro interno no servidor",
+                error.message || "Erro desconhecido"
+            ); 
         }
     }
 
@@ -131,12 +138,16 @@ export class RidesBusiness {
 
             return rides;
         } catch (error: any) {
-            throw new CustomError (
-                error.status_code,
-                error.error_code,
-                error.description, 
-                error.error_description
-            );   
+            if (error instanceof CustomError) {
+                throw error;
+            }
+    
+            throw new CustomError(
+                500,
+                "INTERNAL_ERROR",
+                "Ocorreu um erro interno no servidor",
+                error.message || "Erro desconhecido"
+            ); 
         }
     }
 };

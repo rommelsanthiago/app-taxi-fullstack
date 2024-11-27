@@ -1,4 +1,20 @@
 import { createGlobalStyle } from 'styled-components';
+import 'react-toastify/dist/ReactToastify.css';
+
+export const theme = {
+    colors: {
+      primary: '#000',
+      secondary: '#FFF',
+      success: '#28a745',
+      danger: '#dc3545',
+      warning: '#ffc107',
+      info: '#17a2b8'
+    },
+    bg: {
+        light: '#fdf420',
+        dark: '#343a40',
+    }
+};  
 
 const GlobalStyles = createGlobalStyle`
     * {
@@ -11,7 +27,7 @@ const GlobalStyles = createGlobalStyle`
         }
                 
         ::-webkit-scrollbar-thumb {
-            background: #fdf420;
+            background: ${({theme}) => theme.bg.light};
             border-radius: 999px;
         }
     }
@@ -19,7 +35,7 @@ const GlobalStyles = createGlobalStyle`
     body {
         max-width: 100vw;
         min-height: 100vh;
-        background-color: #fdf420;
+        background-color: ${({theme}) => theme.bg.light};
     }
 `;
 

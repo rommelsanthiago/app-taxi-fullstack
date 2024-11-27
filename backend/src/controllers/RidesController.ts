@@ -12,7 +12,6 @@ export class RidesController {
 
             res.status(200).json({message: "Operação realizada com sucesso", estimate});
         } catch (error: any) {
-            console.log(error)
             res.status(error.status_code).send({
                 error_code: error.error_code,
                 description: error.description,

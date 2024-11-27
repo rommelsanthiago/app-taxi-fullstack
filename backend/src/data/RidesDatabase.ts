@@ -43,11 +43,15 @@ export class RidesDatabase extends BaseDatabase {
             
             return drivers;
         } catch (error: any) {
+            if (error instanceof CustomError) {
+                throw error;
+            }
+    
             throw new CustomError(
-                error.status_code,
-                error.error_code,
-                error.message, 
-                error.error_description
+                500,
+                "INTERNAL_ERROR",
+                "Ocorreu um erro interno no servidor",
+                error.message || "Erro desconhecido"
             );
         }
     }
@@ -59,11 +63,15 @@ export class RidesDatabase extends BaseDatabase {
 
             return driver;
         } catch (error: any) {
+            if (error instanceof CustomError) {
+                throw error;
+            }
+    
             throw new CustomError(
-                error.status_code,
-                error.error_code,
-                error.message, 
-                error.error_description
+                500,
+                "INTERNAL_ERROR",
+                "Ocorreu um erro interno no servidor",
+                error.message || "Erro desconhecido"
             );
         }
     }
@@ -73,12 +81,16 @@ export class RidesDatabase extends BaseDatabase {
             await RidesDatabase.connection;
             await RidesDatabase.ride.create(ride);
         } catch (error: any) {
+            if (error instanceof CustomError) {
+                throw error;
+            }
+    
             throw new CustomError(
-                error.status_code,
-                error.error_code,
-                error.message,
-                error.error_description
-            )
+                500,
+                "INTERNAL_ERROR",
+                "Ocorreu um erro interno no servidor",
+                error.message || "Erro desconhecido"
+            );
         }
     }
 
@@ -95,12 +107,16 @@ export class RidesDatabase extends BaseDatabase {
 
             return rides;
         } catch (error: any) {
+            if (error instanceof CustomError) {
+                throw error;
+            }
+    
             throw new CustomError(
-                error.status_code,
-                error.error_code,
-                error.message,
-                error.error_description
-            )
+                500,
+                "INTERNAL_ERROR",
+                "Ocorreu um erro interno no servidor",
+                error.message || "Erro desconhecido"
+            );
         }
     }
 }
