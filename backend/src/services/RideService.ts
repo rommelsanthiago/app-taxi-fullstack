@@ -2,7 +2,7 @@ import { RideEstimateInput } from "../model/Ride";
 import { calculateRoute } from "../util/GoogleMapsUtil";
 
 class RideService {
-    async calculateEstimate({ customer_id, origin, destination }: RideEstimateInput) {
+    async calculateEstimate({ origin, destination }: RideEstimateInput) {
         const routeData = await calculateRoute(origin, destination);
 
         return {

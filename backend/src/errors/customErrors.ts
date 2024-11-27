@@ -22,3 +22,15 @@ export class SameData extends CustomError {
         super(400, "O destino e a origem são iguais", "O destino e a origem devem ser diferentes");
     }
 };
+
+export class DriverNotFound extends CustomError {
+    constructor(){
+        super(404, "Motorista não encontrado", "Verifique se o motorista está cadastrado");
+    }
+};
+
+export class InvalidDistance extends CustomError {
+    constructor(){
+        super(400, "Distância inválida", "A distância é muito curta para o motorista selecionado.");
+    }
+};

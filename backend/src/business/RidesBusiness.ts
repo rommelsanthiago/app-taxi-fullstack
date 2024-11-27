@@ -1,7 +1,7 @@
 import RideService from "../services/RideService";
 import { RidesRepository } from "./RidesRepository";
-import { CustomError, InvalidData, SameData } from "../errors/customErrors";
-import { Estimates } from "../model/Ride";
+import { CustomError, DriverNotFound, InvalidData, InvalidDistance, SameData } from "../errors/customErrors";
+import { Estimates, Ride, RideConfirmInput } from "../model/Ride";
 
 export class RidesBusiness {
     constructor(
@@ -18,7 +18,7 @@ export class RidesBusiness {
                 throw new SameData();
             }
 
-            const estimate = await RideService.calculateEstimate({ customer_id, origin, destination });
+            const estimate = await RideService.calculateEstimate({ origin, destination });
             
             const drivers = await this.ridesDatabase.getDrivers(estimate.distance);
 
@@ -40,6 +40,7 @@ export class RidesBusiness {
                     status: estimate.routeResponse.status
                 }
             }
+
             return estimates;
         } catch (error: any) {
             console.error(error);
@@ -48,6 +49,51 @@ export class RidesBusiness {
                 error.description, 
                 error.error_description
             );
+        }
+    }
+
+    public confirmRide = async (input: RideConfirmInput) => {
+        try {
+            const { customer_id, origin, destination, driver, distance, duration, value } = input;
+
+            if (!customer_id || !origin || !destination || !driver || !distance || !duration || !value) {
+                throw new InvalidData();
+            }
+
+            if (origin === destination) {
+                throw new SameData();
+            }
+
+            const validDriver = await this.ridesDatabase.findDriverById(driver.id);
+
+            if (!validDriver) {
+                throw new DriverNotFound();
+            };
+
+            if (distance < validDriver.minKm) {
+                throw new InvalidDistance();
+            };
+
+            const ride: Ride = {
+                customer_id,
+                origin,
+                destination,
+                driver: {
+                    id: driver.id,
+                    name: driver.name,
+                },
+                distance,
+                value,
+                duration
+            };
+
+            await this.ridesDatabase.saveRide(ride);            
+        } catch (error: any) {
+            throw new CustomError (
+                error.error_code,
+                error.description, 
+                error.error_description
+            );   
         }
     }
 };
